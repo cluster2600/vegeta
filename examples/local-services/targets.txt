@@ -1,0 +1,11 @@
+# Vegeta targets file — local service benchmarks
+# Usage: vegeta attack -targets=targets.txt -rate=50 -duration=30s | vegeta report
+
+# CRM Dashboard (port 8080) — static/server-rendered UI
+GET http://localhost:8080/
+
+# CRM API — applications endpoint (port 8080)
+GET http://localhost:8080/applications
+
+# Life RAG Web UI (port 8092) — semantic search / RAG frontend
+GET http://localhost:8092/
