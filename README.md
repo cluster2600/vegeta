@@ -897,6 +897,34 @@ Why aren't we using pushgateway instead? See [this comment](https://github.com/t
 
 There's [an issue](https://github.com/tsenart/vegeta/issues/637) tracking the proper solution to all these limitations which is a remote write integration.
 
+## Real-world example: benchmarking local services
+
+The `examples/local-services/` directory shows how to benchmark a real-world local stack
+(a CRM app + a RAG-powered web UI) using vegeta. Results from a 2026-02-19 baseline run on
+a MacBook Pro M3:
+
+| Service | Rate | Success | p50 | p99 |
+|---|---|---|---|---|
+| CRM Dashboard (`:8080/`) | 50 req/s | 99.8% | 2.9 ms | 27.5 ms |
+| CRM API `/applications` (`:8080`) | 30 req/s | 100% | 5.6 ms | 362 ms |
+| Life RAG Web UI (`:8092/`) | 20 req/s | 100% | 43 ms | 136 ms |
+
+Quick start:
+
+```bash
+# Run all three benchmarks
+./examples/local-services/run-benchmark.sh
+
+# Or target a single endpoint manually
+echo "GET http://localhost:8080/" | \
+  vegeta attack -rate=50 -duration=30s | \
+  vegeta report
+```
+
+See [`examples/local-services/targets.txt`](examples/local-services/targets.txt) for the
+targets file and [`examples/local-services/run-benchmark.sh`](examples/local-services/run-benchmark.sh)
+for the full benchmark script.
+
 ## License
 
 See [LICENSE](LICENSE).
